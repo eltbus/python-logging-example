@@ -1,6 +1,3 @@
-requirements:
-	@poetry export --without-hashes --without-urls -o requirements.txt
-
 build:
 	@docker build -t mini-app .
 
@@ -10,8 +7,8 @@ build-alt:
 run:
 	@docker run --rm -t -p 8000:8000 mini-app
 
-get:
-	@curl -X 'GET' localhost:8000
-
-format:
-	@poetry run python -m ruff format main
+check-concurrency:
+	@for i in {1..3}; do \
+        curl -sX 'GET' localhost:8000 -o /dev/null & \
+        sleep .5; \
+    done

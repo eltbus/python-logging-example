@@ -1,16 +1,21 @@
 version: 1
 disable_existing_loggers: False
 
+filters:
+  context_injector:
+    (): main.helpers.logger_filters.ContextInjectionFilter
+
 formatters:
   custom:
-    class: main.helpers.logger_formatters.CustomFormatter
-    format: '%(asctime)s | %(name)s | %(levelname)s | %(context_user)s | %(message)s'
+    (): main.helpers.logger_formatters.CustomFormatter
+    format: '%(asctime)s | %(levelname)s | %(context_user)s | %(name)s | %(message)s'
     datefmt: '%Y-%m-%dT%H:%M:%SZ'
 
 handlers:
   custom:
-    class: main.helpers.logger_handlers.CustomHandler
+    (): main.helpers.logger_handlers.CustomHandler
     level: DEBUG
+    filters: [context_injector]
     formatter: custom
 
 loggers:

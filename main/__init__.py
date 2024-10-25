@@ -2,6 +2,7 @@ import contextlib
 import logging
 import logging.config
 import pathlib
+from itertools import cycle
 from typing import Annotated
 
 from fastapi import FastAPI, Depends
@@ -30,12 +31,15 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+users = cycle(["foo", "bar", "spam"])
+
+
 def get_user():
-    return "foo"
+    return next(users)
 
 
 @app.get("/")
 async def get_root(user: Annotated[str, Depends(get_user)]):
     ctx_context.set(Context(user=user))
     logger.debug(msg="get_root was called!")
-    return leave_babe()
+    return await leave_babe()
